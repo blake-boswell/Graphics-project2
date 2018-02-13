@@ -1,0 +1,9 @@
+﻿  main.cpp
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(182): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(183): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(184): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(187): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(188): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(189): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\blake\documents\school\graphics\assignment2\assignment2\assignment2\main.cpp(190): warning C4305: 'argument': truncation from 'double' to 'float'
+  Assignment2.vcxproj -> C:\Users\blake\Documents\School\Graphics\Assignment2\Assignment2\Debug\Assignment2.exe
