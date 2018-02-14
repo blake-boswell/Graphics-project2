@@ -2,6 +2,13 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Point.h"
+#include "Letter.h"
+
+using namespace std;
 
 // Global variables 
 int xAngle = 0;
@@ -9,6 +16,231 @@ int yAngle = 0;
 int zAngle = 0;
 // GLenum mode = GL_POLYGON;
 GLenum mode = GL_LINE_LOOP;
+
+// Functions for creating letter models
+// <begin>
+bool isFloatOrInt(std::string input) {
+	std::string delimeter = ".";
+	int splitIndex = input.find(delimeter);
+	// No decimal, its an int
+	if (splitIndex == -1 && (input[0] == '-' || isdigit(input[0]))) {
+		for (int i = 1; i < input.size(); i++) {
+			if (!isdigit(input[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	else if (input[0] == '-' || isdigit(input[0])) {
+		for (int i = 1; i < splitIndex; i++) {
+			if (!isdigit(input[i])) {
+				return false;
+			}
+		}
+		for (int i = splitIndex + 1; i < input.size(); i++) {
+			if (!isdigit(input[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+
+void writeLetterHeading(Letter letter, string filename) {
+	ofstream writer;
+	writer.open(filename, ios::app);
+	writer << "1\n\n";
+	writer << letter.getLetter() << "\n" << letter.getNumVertices() << "\n";
+	writer.close();
+}
+
+void writePoint(int x, int y, string filename) {
+	ofstream writer;
+	writer.open(filename, ios::app);
+	writer << x << "," << y << "\n";
+	writer.close();
+}
+
+void resizePrompt(char letter, Letter letters[]) {
+	for (int i = 0; i < Letter::numLetters; i++) {
+		if (letters[i].getLetter() == letter) {
+			std::cout << "You chose " << letter << std::endl;
+			std::string xSize;
+			std::string ySize;
+			std::cout << "Enter X size" << std::endl;
+			std::cin >> xSize;
+			// Error handling
+			while (!isFloatOrInt(xSize)) {
+				std::cout << "Please enter only numbers." << std::endl;
+				std::cout << "Enter X size" << std::endl;
+				std::cin >> xSize;
+			}
+			float x = std::stof(xSize);
+			std::cout << "Enter Y size" << std::endl;
+			std::cin >> ySize;
+			// Error handling
+			while (!isFloatOrInt(ySize)) {
+				std::cout << "Please enter only numbers." << std::endl;
+				std::cout << "Enter Y size" << std::endl;
+				std::cin >> ySize;
+			}
+			float y = std::stof(ySize);
+			Point* newPoints = letters[i].transform(x, y);
+			std::cout << "poly2d" << letters[i].getNumVertices() << std::endl;
+			writeLetterHeading(letters[i], "output.txt");
+			for (int j = 0; j < letters[i].getNumVertices(); j++) {
+				std::cout << (newPoints + j)->getX() << " " << (newPoints + j)->getY() << std::endl;
+				// Write point to file
+				writePoint((newPoints + j)->getX(), (newPoints + j)->getY(), "output.txt");
+			}
+			// delete newPoints;
+		}
+	}
+}
+
+void letterTransformationMenu(Letter letters[]) {
+	bool loop = true;
+	std::string response;
+	char input;
+	while (loop) {
+		// prompt user for what letter they want to generate
+		std::cout << "What letter do you want to generate? (L, N, T, E, F)" << std::endl <<
+			"Or enter  \"q\" to quit the program" << std::endl;
+		std::cin >> response;
+		if (response.size() == 1) {
+			input = response[0];
+			if (isalpha(input)) {
+				input = toupper(input);
+				// prompt user for size of model in the X & Y dimensions
+				switch (input) {
+				case 'L':
+					resizePrompt('L', letters);
+					break;
+				case 'N':
+					resizePrompt('N', letters);
+					break;
+				case 'T':
+					resizePrompt('T', letters);
+					break;
+				case 'E':
+					resizePrompt('E', letters);
+					break;
+				case 'F':
+					resizePrompt('F', letters);
+					break;
+				case 'Q':
+					loop = false;
+					break;
+				default:
+					std::cout << "Invalid input: please enter one of the available letters(L, N, T, E, F)" << std::endl;
+					break;
+				}
+			}
+		}
+		else {
+			std::cout << "Invalid input: please enter a letter" << std::endl;
+		}
+
+	}
+
+}
+
+int readFile(std::string fileName) {
+	std::ifstream file;
+	file.open(fileName);
+	if (file.is_open()) {
+		std::cout << "Reading file..." << std::endl;
+		std::string pair;
+		std::string line;
+		char letter;
+		int numVertices;
+		int index;
+		int splitIndex;
+		int x;
+		int y;
+
+		// Read numLetter line
+		std::getline(file, line, '\n');
+		int numLetters = std::stoi(line);
+		Letter* letters = new Letter[numLetters];
+		// Read blank line
+		std::getline(file, line, '\n');
+		// Read in letters and vertices
+		for (int i = 0; i < numLetters; i++) {
+			// Read letter line
+			std::getline(file, line, '\n');
+			letter = line[0];
+			letters[i].setLetter(letter);
+			// Read numVertices line
+			std::getline(file, line, '\n');
+			numVertices = std::stoi(line);
+			letters[i].setNumVertices(numVertices);
+			Point* points = new Point[numVertices];
+			// Read original points
+			std::getline(file, line);
+			index = 0;
+			while (line != "") {
+				pair = line;
+				// Extract the x and y
+				std::string delimeter = ",";
+				splitIndex = line.find(delimeter);
+				x = std::stoi(line.substr(0, splitIndex));
+				y = std::stoi(line.substr(splitIndex + 1, line.length()));
+				// create a point object for each point
+				points[index].setX(x);
+				points[index].setY(y);
+				index++;
+				// Protection from seg. fault
+				// Won't try to read in another line if we are at the end of file
+				if (file.eof()) {
+					line = "";
+				}
+				std::getline(file, line);
+			}
+			// Set the letter's points to the points array we just made
+			letters[i].setOriginalPoints(points, numVertices);
+			// delete points;
+		}
+		file.close();
+		std::cout << "File read complete." << std::endl;
+		// Letter transformation menu
+		letterTransformationMenu(letters);
+		return 1;
+	}
+	else {
+		std::cout << "File wasn't opened! Please make sure you entered the correct file name" << std::endl;
+		return 0;
+	}
+}
+
+std::string getFileName() {
+	// default file
+	std::string fileName = "letters.txt";
+	// Prompt user for a file to read from
+	std::string response;
+	char input;
+	std::cout << "Welcome!" << std::endl;
+	std::cout << "Read data from default file? (y or n)" << std::endl;
+	std::cin >> response;
+	input = response[0];
+	// Error handling
+	while (input != 'y' && input != 'Y' && input != 'n' && input != 'N') {
+		std::cout << "Please respond with y or n" << std::endl;
+		// re-prompt
+		std::cout << "Read data from default file? (y or n)" << std::endl;
+		std::cin >> input;
+	}
+	if (input == 'n' || input == 'N') {
+		std::cout << "Please enter the name of the file you wish to read from:" << std::endl;
+		std::cin >> fileName;
+	}
+	return fileName;
+}
+// <end>
 
 //---------------------------------------
 // Init function for OpenGL
@@ -20,6 +252,32 @@ void init()
 	glLoadIdentity();
 	glOrtho(-2.0, 2.0, -2.0, 2.0, -2.0, 2.0);
 	glEnable(GL_DEPTH_TEST);
+
+	// Delete old output.txt file
+	remove("output.txt");
+	// Get user input for letter models
+	bool loop = true;
+	while (loop) {
+		std::string fileName = getFileName();
+		// Read file
+		if (readFile(fileName)) {
+			// Success
+			loop = false;
+		}
+		else {
+			// Failed reading 
+			std::cout << "Would you like to retry? (y or n)" << std::endl;
+			char response;
+			std::cin >> response;
+			while (response != 'Y' && response != 'y' && response != 'N' && response != 'n') {
+				std::cout << "Would you like to retry? (y or n)" << std::endl;
+				std::cin >> response;
+			}
+			if (response == 'n' || response == 'N') {
+				loop = false;
+			}
+		}
+	}
 }
 
 //---------------------------------------
