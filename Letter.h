@@ -36,6 +36,10 @@ public:
 	void setNumVertices(int numVertices);
 	Point* transform(float x, float y, float z);
 	void print();
+	static void letterTransformationMenu(Letter letters[]);
+	static Letter* readLetters(string filename);
+	static Letter read3DLetter(string filename);
+	static void generateLetters();
 };
 
 
