@@ -58,7 +58,7 @@ void writeLetterHeading(Letter letter, string filename) {
 	writer.close();
 }
 
-void writePoint(int x, int y, string filename) {
+void writePoint(float x, float y, string filename) {
 	ofstream writer;
 	writer.open(filename, ios::app);
 	writer << x << "," << y << "\n";
@@ -108,8 +108,7 @@ void letterTransformationMenu(Letter letters[]) {
 	char input;
 	while (loop) {
 		// prompt user for what letter they want to generate
-		std::cout << "What letter do you want to generate? (L, N, T, E, F)" << std::endl <<
-			"Or enter  \"q\" to quit the program" << std::endl;
+		std::cout << "What letter do you want to generate? (L, N, T, E, F)" << std::endl;
 		std::cin >> response;
 		if (response.size() == 1) {
 			input = response[0];
@@ -119,20 +118,22 @@ void letterTransformationMenu(Letter letters[]) {
 				switch (input) {
 				case 'L':
 					resizePrompt('L', letters);
+					loop = false;
 					break;
 				case 'N':
 					resizePrompt('N', letters);
+					loop = false;
 					break;
 				case 'T':
 					resizePrompt('T', letters);
+					loop = false;
 					break;
 				case 'E':
 					resizePrompt('E', letters);
+					loop = false;
 					break;
 				case 'F':
 					resizePrompt('F', letters);
-					break;
-				case 'Q':
 					loop = false;
 					break;
 				default:
