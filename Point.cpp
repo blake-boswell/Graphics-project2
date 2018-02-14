@@ -3,31 +3,41 @@
 //
 #include "Point.h"
 
-Point::Point(int x, int y) {
-    Point::x = x;
-    Point::y = y;
+Point::Point(float x, float y, float z) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 
 Point::Point() {
-    Point::x = 0;
-    Point::y = 0;
+	this->x = 0;
+	this->y = 0;
+	this->z = 1;
 }
 
 Point::~Point() {
 }
 
 float Point::getX() {
-    return x;
+	return this->x;
 }
 
 void Point::setX(float x) {
-    Point::x = x;
+	this->x = x;
 }
 
 float Point::getY() {
-    return y;
+	return this->y;
 }
 
 void Point::setY(float y) {
-    Point::y = y;
+	this->y = y;
+}
+
+float Point::getZ() {
+	return this->z;
+}
+
+void Point::setZ(float z) {
+	this->z = z;
 }
