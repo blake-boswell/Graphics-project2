@@ -234,7 +234,6 @@ void resizePrompt(char letter, Letter letters[]) {
 				// Write point to file
 				writePoint((newPoints + j)->getX(), (newPoints + j)->getY(), (newPoints + j)->getZ(), "output.txt");
 			}
-			// delete newPoints;
 		}
 	}
 	// Free the unused memory
@@ -355,7 +354,7 @@ Letter* Letter::readLetters(string fileName) {
 	}
 }
 
-Letter Letter::read3DLetter(string filename) {
+void Letter::read3DLetter(string filename) {
 	ifstream file;
 	file.open(filename);
 	if (file.is_open()) {
@@ -369,17 +368,16 @@ Letter Letter::read3DLetter(string filename) {
 		float x;
 		float y;
 		float z;
-		Letter letter;
 		// Read in letters and vertices
 
 		// Read letter line
 		getline(file, line, '\n');
 		letterChar = line[0];
-		letter.setLetter(letterChar);
+		this->letter = letterChar;
 		// Read numVertices line
 		getline(file, line, '\n');
 		numVertices = std::stoi(line);
-		letter.setNumVertices(numVertices);
+		this->numVertices = numVertices;
 		Point* points = new Point[numVertices];
 		// Read original points
 		getline(file, line);
@@ -408,16 +406,10 @@ Letter Letter::read3DLetter(string filename) {
 			getline(file, line);
 		}
 		// Set the letter's points to the points array we just made
-		letter.setOriginalPoints(points, numVertices);
+		this->setOriginalPoints(points, numVertices);
 		// delete points;
-
-		file.close();
+		delete[] points;
 		cout << "File read complete." << endl;
-		cout << "Returning letter variable" << endl;
-		return letter;
-	}
-	else {
-		cout << "File wasn't opened! Please make sure you entered the correct file name" << endl;
 	}
 }
 
@@ -446,6 +438,8 @@ string getFileName() {
 }
 
 void Letter::generateLetters() {
+	// Clear old values in output.txt
+	remove("output.txt");
 	// Get user input for letter models
 	bool loop = true;
 	while (loop) {

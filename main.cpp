@@ -8,8 +8,6 @@
 #include "Point.h"
 #include "Letter.h"
 
-using namespace std;
-
 // Global variables 
 int xAngle = 0;
 int yAngle = 0;
@@ -17,11 +15,6 @@ int zAngle = 0;
 Letter letter;
 // GLenum mode = GL_POLYGON;
 GLenum mode = GL_LINE_LOOP;
-
-// Functions for creating letter models
-// <begin>
-
-// <end>
 
 //---------------------------------------
 // Init function for OpenGL
@@ -37,13 +30,8 @@ void init()
 	// User Input Menu
 	Letter::generateLetters();
 
-	letter = Letter::read3DLetter("output.txt");
-
-	// Debugging
-	cout << "Receiving letter variable" << endl;
-	cout << Letter::numLetters << endl;
-	letter.print();
-	
+	// Read 3D output file into the letter object
+	letter.read3DLetter("output.txt");
 }
 
 //---------------------------------------
@@ -139,7 +127,6 @@ void display()
 	glRotatef(zAngle, 0.0, 0.0, 1.0);
 
 	// Read File for letter points
-	// Draw tables and book cases
 	drawLetter(letter);
 	glFlush();
 }

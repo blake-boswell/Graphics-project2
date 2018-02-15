@@ -18,6 +18,10 @@ private:
 	int numVertices;
 
 
+	static void letterTransformationMenu(Letter letters[]);
+	static Letter* readLetters(string filename);
+
+
 public:
 	static int numLetters;
 	Letter();
@@ -36,9 +40,7 @@ public:
 	void setNumVertices(int numVertices);
 	Point* transform(float x, float y, float z);
 	void print();
-	static void letterTransformationMenu(Letter letters[]);
-	static Letter* readLetters(string filename);
-	static Letter read3DLetter(string filename);
+	void read3DLetter(string filename);
 	static void generateLetters();
 };
 
