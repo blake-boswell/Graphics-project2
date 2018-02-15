@@ -17,12 +17,10 @@ Letter::Letter() {
 	float originalWidth = -1;
 	float originalDepth = 1;
 	int numVertices = -1;
-	cout << "Letter Constructor called." << endl;
 
 }
 Letter::~Letter() {
 	numLetters--;
-	cout << "Letter Destructor called." << endl;
 }
 
 int Letter::numLetters = 0;
@@ -191,7 +189,6 @@ void writePoint(float x, float y, float z, string filename) {
 }
 
 void resizePrompt(char letter, Letter letters[]) {
-	cout << "Number of letters when we enter the resize prompt: " << Letter::numLetters << endl;
 	for (int i = 0; i < Letter::numLetters; i++) {
 		if (letters[i].getLetter() == letter) {
 			cout << "You chose " << letter << endl;
@@ -219,7 +216,7 @@ void resizePrompt(char letter, Letter letters[]) {
 			}
 			float y = std::stof(ySize);
 
-			cout << "Enter Z size" << endl;
+			cout << "Enter Z size (thickness)" << endl;
 			cin >> zSize;
 			// Error handling
 			while (!isFloatOrInt(zSize)) {
@@ -241,9 +238,7 @@ void resizePrompt(char letter, Letter letters[]) {
 		}
 	}
 	// Free the unused memory
-	cout << "Number of letters before deletion: " << Letter::numLetters << endl;
 	delete[] letters;
-	cout << "Number after: " << Letter::numLetters << endl;
 }
 
 void Letter::letterTransformationMenu(Letter letters[]) {
@@ -374,12 +369,8 @@ Letter Letter::read3DLetter(string filename) {
 		float x;
 		float y;
 		float z;
-
-
-		cout << "No. Letters before 3D read creation" << Letter::numLetters << endl;
 		Letter letter;
 		// Read in letters and vertices
-		cout << "Reading 3D. No. of letters " << Letter::numLetters << endl;
 
 		// Read letter line
 		getline(file, line, '\n');
